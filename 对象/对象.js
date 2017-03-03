@@ -25,6 +25,14 @@ var collectNonEnumProps = function(obj, keys) {
 
 // Retrieve the names of an object's own properties.
 // Delegates to **ECMAScript 5**'s native `Object.keys`.
+/**
+ * [keys 检索object拥有的所有可枚举属性的名称]
+ * @param  {[type]} obj [description]
+ * @return {[type]}     [description]
+ * 如果不是对象，则返回一个空数组（数组也是对象）
+ * 如果存在原生key方法，则直接调用（nativeKeys ＝ object.keys）
+ *
+ */
 _.keys = function(obj) {
   if (!_.isObject(obj)) return [];
   if (nativeKeys) return nativeKeys(obj);
@@ -348,9 +356,14 @@ _.isArray = nativeIsArray || function(obj) {
 };
 
 // Is a given variable an object?
+/**
+ * [isObject 判断是否为对象(数组和函数是对象)]
+ * @param  {[type]}  obj [待判断的值]
+ * @return {Boolean}     [description]
+ */
 _.isObject = function(obj) {
   var type = typeof obj;
-  return type === 'function' || type === 'object' && !!obj;
+  return type === 'function' || type === 'object' && !!obj; //包涵函数，排除null
 };
 
 // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError, isMap, isWeakMap, isSet, isWeakSet.
@@ -404,17 +417,27 @@ _.isUndefined = function(obj) {
 
 // Shortcut function for checking if an object has a given property directly
 // on itself (in other words, not on a prototype).
+/**
+ * [has 检查对象是否包含给定的property]
+ * @param  {[type]}  obj  [对象]
+ * @param  {[type]}  path [property]
+ * @return {Boolean}      [是否包含]
+ */
 _.has = function(obj, path) {
+  // 如果要检测的是一个属性
   if (!_.isArray(path)) {
     return obj != null && hasOwnProperty.call(obj, path);
   }
+  //如果要检测的是一个属性组
   var length = path.length;
   for (var i = 0; i < length; i++) {
     var key = path[i];
     if (obj == null || !hasOwnProperty.call(obj, key)) {
+        // 如果有一个不是，则返回false
       return false;
     }
     obj = obj[key];
   }
+  // 如果全是，则返回!!length
   return !!length;
 };
